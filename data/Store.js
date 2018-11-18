@@ -1,6 +1,8 @@
 import { observable, computed, action } from "mobx";
 import { AsyncStorage, ListView } from 'react-native';
 import Player from "./Player";
+import { DATA_SOURCE } from "../constants/Constants";
+import { GAME_INFO } from "../constants/GameInfo";
 
 export default class Store {
    playersStorageKey = '@BoardgameScorekeeper/Players';
@@ -22,6 +24,10 @@ export default class Store {
 
    @computed get gamesDataSource() {
       return this.ds.cloneWithRows(this.games.slice());
+   }
+
+   @computed get gameInfoDataSource() {
+      return this.ds.cloneWithRows(GAME_INFO);
    }
 
    @action createPlayer(first, last) {
@@ -46,7 +52,6 @@ export default class Store {
       AsyncStorage.multiGet([this.playersStorageKey, this.gamesStorageKey])
          .then((results) => {
             this.players = JSON.parse(results[0][1]).map(data => new Player(data)) || [];
-            console.log(this.players);
             this.games = JSON.parse(results[1][1]) || [];
             this.isLoading = false;
          });

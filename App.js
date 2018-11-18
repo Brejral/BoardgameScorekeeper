@@ -12,12 +12,6 @@ const RootStack = createStackNavigator({
    Home: {
       screen: HomeScreen
    },
-   NewPlayer: {
-      screen: NewPlayerScreen
-   },
-   NewGameScreen: {
-
-   }
 });
 
 @observer class App extends React.Component {

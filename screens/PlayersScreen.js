@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { COLORS } from '../constants/Constants';
 import { createStackNavigator } from 'react-navigation';
 import { Icon, ListItem } from 'react-native-elements';
-import NewPlayerScreen from './NewPlayerScreen';
 import PlayerInfoScreen from './PlayerInfoScreen';
 import NewPlayerSceeen from './NewPlayerScreen';
 
