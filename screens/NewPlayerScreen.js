@@ -51,7 +51,7 @@ import { observable } from 'mobx';
             <FormLabel>Last Name</FormLabel>
             <FormInput onChangeText={this.onLastNameTextChange} />
             <FormValidationMessage>{!this.lastName && 'Required'}</FormValidationMessage>
-            <Button title='Create' style={{ marginTop: 10 }} icon={{ type: 'add' }} onPress={this.onCreateButtonPress} />
+            <Button title='Create' disabled={!this.lastName || !this.firstName} style={{ marginTop: 10 }} icon={{ type: 'add' }} onPress={this.onCreateButtonPress} />
          </View>
       );
    }

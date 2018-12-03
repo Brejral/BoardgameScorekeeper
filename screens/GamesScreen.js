@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { COLORS } from '../constants/Constants';
 import { createStackNavigator } from 'react-navigation';
 import { Icon, ListItem } from 'react-native-elements';
-import NewGameScreen from './NewGameScreen';
+import GameSelectScreen from './GameSelectScreen';
 
-@observer class GamesListScreen extends Component {
+@observer class GamesScreen extends Component {
    static navigationOptions = ({ navigation }) => {
       return {
          headerTitle: 'Game History',
@@ -31,7 +31,7 @@ import NewGameScreen from './NewGameScreen';
    }
 
    addGamePressed() {
-      this.props.navigation.navigate({ routeName: 'NewGame' });
+      this.props.navigation.navigate({ routeName: 'GameSelect' });
    }
 
    render() {
@@ -52,20 +52,4 @@ import NewGameScreen from './NewGameScreen';
    }
 }
 
-const GamesNavigator = createStackNavigator({
-   Games: {
-      screen: GamesListScreen
-   },
-   NewGame: {
-      screen: NewGameScreen
-   }
-});
-
-export default class GamesScreen extends Component {
-   static router = GamesNavigator.router;
-   render() {
-      return (
-         <GamesNavigator navigation={this.props.navigation} screenProps={this.props.screenProps} />
-      )
-   }
-}
+export default GamesScreen;

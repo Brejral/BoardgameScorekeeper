@@ -36,13 +36,44 @@ const TabNavigator = createMaterialBottomTabNavigator(
    }
 );
 
+const getHeaderTitle = (tab) => {
+   switch (tab) {
+      case 'Games':
+         return 'Game History';
+      case 'Players':
+         return 'Manage Players';
+   }
+}
+
 @observer export default class HomeScreen extends React.Component {
    static router = TabNavigator.router;
-   static navigationOptions = () => {
+   static navigationOptions = ({ navigation }) => {
+      let currentTab = navigation.state.routes[navigation.state.index].key;
       return {
-         header: null
+         headerTitle: getHeaderTitle(currentTab),
+         headerStyle: {
+            backgroundColor: COLORS[currentTab],
+         },
+         headerTitleStyle: {
+            color: COLORS.Text1
+         },
+         headerRight: (<Icon name='add' onPress={navigation.getParam('addPlayerPressed')} iconStyle={{ color: COLORS.Text1, marginRight: 10 }} />)
       }
    };
+
+   constructor() {
+      super();
+
+      this.addPlayerPressed = this.addPlayerPressed.bind(this);
+   }
+
+   componentWillMount() {
+      this.props.navigation.setParams({ addPlayerPressed: this.addPlayerPressed });
+   }
+
+   addPlayerPressed() {
+      this.props.navigation.navigate({ routeName: 'NewPlayer' });
+   }
 
    render() {
       return (

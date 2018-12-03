@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { ListItem } from 'react-native-elements';
 import { COLORS } from '../constants/Constants';
 
-@observer class NewGameScreen extends Component {
+@observer class GameSelectScreen extends Component {
    static navigationOptions = ({ navigation }) => {
       return {
-         headerTitle: 'Game History',
+         headerTitle: 'Select Game',
          headerStyle: {
             backgroundColor: COLORS.Games,
          },
@@ -16,15 +16,25 @@ import { COLORS } from '../constants/Constants';
          },
       }
    };
+
+   constructor() {
+      super();
+
+      this.onGameTypeSelect = this.onGameTypeSelect.bind(this);
+   }
+
+   onGameTypeSelect(game) {
+      this.props.navigation.navigate({ routeName: 'Game', params: { game: game } })
+   }
+
    render() {
       return (
          <View>
-            <StatusBar barStyle='light-content' />
             <ListView
                dataSource={this.props.screenProps.store.gameInfoDataSource}
-               renderRow={(rowData) => {
+               renderRow={(game) => {
                   return (
-                     <ListItem title={rowData.name} />
+                     <ListItem title={game.name} onPress={() => this.onGameTypeSelect(game)} />
                   );
                }}
                enableEmptySections={true}
@@ -34,4 +44,4 @@ import { COLORS } from '../constants/Constants';
    }
 }
 
-export default NewGameScreen;
+export default GameSelectScreen;

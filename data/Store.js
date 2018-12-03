@@ -42,6 +42,15 @@ export default class Store {
       this.save();
    }
 
+   @action deletePlayer(player) {
+      let index = this.players.indexOf(player);
+      this.players = [
+         ...this.players.slice(0, index),
+         ...this.players.slice(index + 1)
+      ];
+      this.save();
+   }
+
    save() {
       AsyncStorage.setItem(this.playersStorageKey, JSON.stringify(this.players));
       AsyncStorage.setItem(this.gamesStorageKey, JSON.stringify(this.games));
@@ -51,6 +60,7 @@ export default class Store {
       this.isLoading = true;
       AsyncStorage.multiGet([this.playersStorageKey, this.gamesStorageKey])
          .then((results) => {
+            console.log(results);
             this.players = JSON.parse(results[0][1]).map(data => new Player(data)) || [];
             this.games = JSON.parse(results[1][1]) || [];
             this.isLoading = false;
