@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import GamesScreen from './GamesScreen';
 import PlayersScreen from './PlayersScreen';
-import { withNavigation } from 'react-navigation';
 import { COLORS } from '../constants/Constants';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 
 const TabNavigator = createMaterialBottomTabNavigator(
    {
@@ -57,27 +57,42 @@ const getHeaderTitle = (tab) => {
          headerTitleStyle: {
             color: COLORS.Text1
          },
-         headerRight: (<Icon name='add' onPress={navigation.getParam('addPlayerPressed')} iconStyle={{ color: COLORS.Text1, marginRight: 10 }} />)
+         headerRight: (<Icon name='add' onPress={() => { navigation.getParam('addPressed')(currentTab) }} iconStyle={{ color: COLORS.Text1, marginRight: 10 }} />)
       }
    };
+
+   @observable showSelectGameBox = false;
 
    constructor() {
       super();
 
-      this.addPlayerPressed = this.addPlayerPressed.bind(this);
+      this.onAddPressed = this.onAddPressed.bind(this);
+      this.addPlayer = this.addPlayer.bind(this);
    }
 
    componentWillMount() {
-      this.props.navigation.setParams({ addPlayerPressed: this.addPlayerPressed });
+      this.props.navigation.setParams({ addPressed: this.onAddPressed });
    }
 
-   addPlayerPressed() {
+   onAddPressed(tab) {
+      switch (tab) {
+         case 'Games':
+            this.showSelectGameBox = true;
+            break;
+         case 'Players':
+            this.addPlayer();
+            break;
+      }
+
+   }
+
+   addPlayer() {
       this.props.navigation.navigate({ routeName: 'NewPlayer' });
    }
 
    render() {
       return (
-         <TabNavigator navigation={this.props.navigation} screenProps={this.props.screenProps} />
+         <TabNavigator navigation={this.props.navigation} screenProps={Object.assign(this.props.screenProps, { showSelectGameBox: this.showSelectGameBox })} />
       );
    }
 }

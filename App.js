@@ -1,5 +1,6 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import { createStackNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
 import Store from './data/Store';
@@ -10,6 +11,9 @@ import NewPlayerSceeen from './screens/NewPlayerScreen';
 
 const store = new Store();
 window.store = store;
+
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 const RootStack = createStackNavigator({
    Home: {

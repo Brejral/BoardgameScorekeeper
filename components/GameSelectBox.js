@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { ListView, View, StatusBar } from 'react-native';
+import { ListView, View, Dimensions } from 'react-native';
 import { observer } from 'mobx-react';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Text, Divider } from 'react-native-elements';
 import { COLORS } from '../constants/Constants';
 
-@observer class GameSelectScreen extends Component {
+@observer class GameSelectBox extends Component {
    static navigationOptions = ({ navigation }) => {
       return {
          headerTitle: 'Select Game',
@@ -28,8 +28,24 @@ import { COLORS } from '../constants/Constants';
    }
 
    render() {
+      let dim = Dimensions.get('window');
       return (
-         <View>
+         <View style={{
+            position: 'relative',
+            justifyContent: 'center',
+            alignContent: 'center',
+            backgroundColor: '#ddd',
+            width: dim.width - 40,
+            height: dim.height - 300,
+            display: this.props.show ? null : 'none',
+            borderRadius: 10,
+            borderWidth: 2,
+            left: 20,
+            top: 20,
+            borderColor: 'black'
+         }}>
+            <Text>Select Game</Text>
+            <Divider style={{ backgroundColor: '#111', width: '96%', margin: '2%' }} />
             <ListView
                dataSource={this.props.screenProps.store.gameInfoDataSource}
                renderRow={(game) => {
@@ -44,4 +60,4 @@ import { COLORS } from '../constants/Constants';
    }
 }
 
-export default GameSelectScreen;
+export default GameSelectBox;

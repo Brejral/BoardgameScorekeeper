@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { ListView, View, Text, StatusBar } from 'react-native';
 import { observer } from 'mobx-react';
 import { COLORS } from '../constants/Constants';
-import { createStackNavigator } from 'react-navigation';
 import { Icon, ListItem } from 'react-native-elements';
-import GameSelectScreen from './GameSelectScreen';
+import GameSelectBox from '../components/GameSelectBox';
 
 @observer class GamesScreen extends Component {
    static navigationOptions = ({ navigation }) => {
@@ -22,21 +21,12 @@ import GameSelectScreen from './GameSelectScreen';
 
    constructor() {
       super();
-
-      this.addGamePressed = this.addGamePressed.bind(this);
-   }
-
-   componentWillMount() {
-      this.props.navigation.setParams({ addGamePressed: this.addGamePressed });
-   }
-
-   addGamePressed() {
-      this.props.navigation.navigate({ routeName: 'GameSelect' });
    }
 
    render() {
       return (
-         <View>
+         <View style={{ flex: 1 }}>
+            <GameSelectBox show={this.props.screenProps.showGameSelectBox} {...this.props} />
             <StatusBar barStyle='light-content' />
             <ListView
                dataSource={this.props.screenProps.store.gamesDataSource}
