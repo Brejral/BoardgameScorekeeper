@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, View, StatusBar, PickerIOS } from 'react-native';
+import { View, StatusBar, PickerIOS } from 'react-native';
 import { observer } from 'mobx-react';
 import { ListItem, Button } from 'react-native-elements';
 import { COLORS } from '../constants/Constants';

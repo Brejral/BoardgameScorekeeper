@@ -1,5 +1,5 @@
 import { observable, computed, action } from "mobx";
-import { AsyncStorage, ListView } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import Player from "./Player";
 import { DATA_SOURCE } from "../constants/Constants";
 import { GAME_INFO } from "../constants/GameInfo";
@@ -12,22 +12,20 @@ export default class Store {
    @observable players = [];
    @observable games = [];
 
-   ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
    constructor() {
       this.load();
    }
 
-   @computed get playersDataSource() {
-      return this.ds.cloneWithRows(this.players.slice().sort((a, b) => a.name.localeCompare(b.name)));
+   @computed get sortedPlayers() {
+      return this.players.slice().sort((a, b) => a.name.localeCompare(b.name));
    }
 
-   @computed get gamesDataSource() {
-      return this.ds.cloneWithRows(this.games.slice());
+   @computed get sortedGames() {
+      return this.games.slice().sort((a, b) => a.date > b.date);
    }
 
-   @computed get gameInfoDataSource() {
-      return this.ds.cloneWithRows(GAME_INFO);
+   @computed get sortedGameInfo() {
+      return GAME_INFO.slice().sort((a, b) => a.name.localeCompare(b.name));
    }
 
    @action createPlayer(first, last) {

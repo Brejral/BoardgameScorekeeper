@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { ListView, View, Text, StatusBar } from 'react-native';
 import { observer } from 'mobx-react';
-import { COLORS } from '../constants/Constants';
-import { createStackNavigator } from 'react-navigation';
-import { Icon, ListItem } from 'react-native-elements';
+import { List, ListItem } from 'react-native-elements';
 
 @observer class PlayersScreen extends Component {
    constructor() {
@@ -27,15 +24,13 @@ import { Icon, ListItem } from 'react-native-elements';
 
    render() {
       return (
-         <ListView
-            dataSource={this.props.screenProps.store.playersDataSource}
-            renderRow={(player) => {
+         <List>
+            {this.props.screenProps.store.sortedPlayers.map((player) => {
                return (
-                  <ListItem title={player.name} onPress={() => this.onPlayerItemPressed(player)} />
+                  <ListItem key={player.name + 'Item'} title={player.name} onPress={() => this.onPlayerItemPressed(player)} />
                );
-            }}
-            enableEmptySections={true}
-         />
+            })}
+         </List>
       );
    }
 }

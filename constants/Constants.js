@@ -1,7 +1,8 @@
-import ListView from 'react-native-elements';
-
 export const COLORS = {
    Games: 'black',
-   Players: 'navy',
+   Players: 'black',
+   NewGame: 'black',
    Text1: 'white',
+   EmptyBackground: '#ddd',
+   EmptyText: '#aaa',
 };

@@ -3,23 +3,30 @@ import { Icon } from 'react-native-elements';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import GamesScreen from './GamesScreen';
 import PlayersScreen from './PlayersScreen';
+import GameSelectScreen from './GameSelectScreen';
 import { COLORS } from '../constants/Constants';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
 const TabNavigator = createMaterialBottomTabNavigator(
    {
+      NewGame: {
+         screen: GameSelectScreen,
+         navigationOptions: {
+            tabBarLabel: 'New Game',
+            tabBarColor: COLORS.NewGame,
+            tabBarIcon: ({ tintColor }) => (<Icon name='pencil-square-o' type='font-awesome' iconStyle={{ color: tintColor }} />)
+         }
+      },
       Games: {
          screen: GamesScreen,
-         title: 'Games',
          navigationOptions: {
             tabBarColor: COLORS.Games,
-            tabBarIcon: ({ tintColor }) => (<Icon name='list' type='font-awesome' iconStyle={{ color: tintColor }} />)
+            tabBarIcon: ({ tintColor }) => (<Icon name='history' type='font-awesome' iconStyle={{ color: tintColor }} />)
          }
       },
       Players: {
          screen: PlayersScreen,
-         title: 'Players',
          navigationOptions: {
             tabBarColor: COLORS.Players,
             tabBarIcon: ({ tintColor }) => (<Icon name='users' type='font-awesome' iconStyle={{ color: tintColor }} />)
@@ -38,6 +45,8 @@ const TabNavigator = createMaterialBottomTabNavigator(
 
 const getHeaderTitle = (tab) => {
    switch (tab) {
+      case 'NewGame':
+         return 'Select Game';
       case 'Games':
          return 'Game History';
       case 'Players':
@@ -57,7 +66,7 @@ const getHeaderTitle = (tab) => {
          headerTitleStyle: {
             color: COLORS.Text1
          },
-         headerRight: (<Icon name='add' onPress={() => { navigation.getParam('addPressed')(currentTab) }} iconStyle={{ color: COLORS.Text1, marginRight: 10 }} />)
+         headerRight: currentTab === 'Players' ? (<Icon name='add' onPress={() => { navigation.getParam('addPressed')(currentTab) }} iconStyle={{ color: COLORS.Text1, marginRight: 10 }} />) : null
       }
    };
 
