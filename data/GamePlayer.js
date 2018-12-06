@@ -66,7 +66,7 @@ export default class GamePlayer {
                borderWidth: 2,
                borderStyle: this.isPhantom ? 'dashed' : 'solid',
                borderColor: this.isPhantom ? COLORS.EmptyText : this.avatarProps.borderColor,
-               backgroundColor: this.isPhantom ? COLORS.EmptyBackground : this.avatarProps.backgroundColor,
+               backgroundColor: props.backgroundColor || (this.isPhantom ? COLORS.EmptyBackground : this.avatarProps.backgroundColor),
             }}
             containerStyle={{ alignSelf: 'center' }}
             {...props}

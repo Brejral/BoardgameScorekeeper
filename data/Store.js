@@ -2,6 +2,7 @@ import { observable, computed, action } from "mobx";
 import { AsyncStorage } from 'react-native';
 import Player from "./Player";
 import { GAME_INFO } from "../constants/GameInfo";
+import Game from "./Game";
 const uuidv4 = require('uuid/v4');
 
 export default class Store {
@@ -11,9 +12,16 @@ export default class Store {
    @observable isLoading = false;
    @observable players = [];
    @observable games = [];
+   gameKeys = {};
 
    constructor() {
       this.load();
+   }
+
+   @action addGame(game) {
+      this.games.push(game);
+      this.gameKeys[game.id] = game;
+      this.save();
    }
 
    @action createPlayer(first, last) {
@@ -47,8 +55,12 @@ export default class Store {
       AsyncStorage.multiGet([this.playersStorageKey, this.gamesStorageKey])
          .then((results) => {
             this.players = JSON.parse(results[0][1]).map(data => new Player(data)) || [];
-            console.log(results[0][1])
-            this.games = JSON.parse(results[1][1]) || [];
+            this.games =
+               //JSON.parse(results[1][1]).map(data => new Game(data)) ||
+               [];
+            this.games.forEach(game => {
+               this.gameKeys[game.id] = game;
+            });
             this.isLoading = false;
          });
    }

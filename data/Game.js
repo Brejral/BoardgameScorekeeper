@@ -11,8 +11,13 @@ export default class Game {
 
    constructor(data) {
       this.id = data.id;
-      this.date = new Date();
+      this.date = data.date || new Date();
       this.gameInfo = data.gameInfo;
+      if (data.players) {
+         data.players.forEach(player => {
+            this.players.push(new GamePlayer(player, this.gameInfo));
+         });
+      }
    }
 
    @action addPlayer(player) {
