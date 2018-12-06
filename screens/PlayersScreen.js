@@ -25,7 +25,7 @@ import { List, ListItem } from 'react-native-elements';
    render() {
       return (
          <List>
-            {this.props.screenProps.store.sortedPlayers.map((player) => {
+            {this.props.screenProps.store.players.map((player) => {
                return (
                   <ListItem key={player.name + 'Item'} title={player.name} onPress={() => this.onPlayerItemPressed(player)} />
                );

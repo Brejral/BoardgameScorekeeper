@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StatusBar } from 'react-native';
 import { observer } from 'mobx-react';
 import { ListItem, List } from 'react-native-elements';
+import { getSortedGameInfo } from '../constants/GameInfo';
 
 @observer class GameSelectScreen extends Component {
 
@@ -20,7 +21,7 @@ import { ListItem, List } from 'react-native-elements';
          <View style={{ flex: 1 }}>
             <StatusBar barStyle='light-content' />
             <List>
-               {this.props.screenProps.store.sortedGameInfo.map((game) => {
+               {getSortedGameInfo().map((game) => {
                   return (
                      <ListItem key={game.name + 'Item'} title={game.name} onPress={() => this.onGameTypeSelect(game)} />
                   );

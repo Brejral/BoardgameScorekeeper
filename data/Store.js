@@ -1,8 +1,8 @@
 import { observable, computed, action } from "mobx";
 import { AsyncStorage } from 'react-native';
 import Player from "./Player";
-import { DATA_SOURCE } from "../constants/Constants";
 import { GAME_INFO } from "../constants/GameInfo";
+const uuidv4 = require('uuid/v4');
 
 export default class Store {
    playersStorageKey = '@BoardgameScorekeeper/Players';
@@ -16,27 +16,15 @@ export default class Store {
       this.load();
    }
 
-   @computed get sortedPlayers() {
-      return this.players.slice().sort((a, b) => a.name.localeCompare(b.name));
-   }
-
-   @computed get sortedGames() {
-      return this.games.slice().sort((a, b) => a.date > b.date);
-   }
-
-   @computed get sortedGameInfo() {
-      return GAME_INFO.slice().sort((a, b) => a.name.localeCompare(b.name));
-   }
-
    @action createPlayer(first, last) {
       this.players = [
          ...this.players,
          new Player({
-            id: this.players.length + 1,
+            id: uuidv4(),
             firstName: first,
             lastName: last
          })
-      ];
+      ].sort((a, b) => a.name.localeCompare(b.name));
       this.save();
    }
 
@@ -59,6 +47,7 @@ export default class Store {
       AsyncStorage.multiGet([this.playersStorageKey, this.gamesStorageKey])
          .then((results) => {
             this.players = JSON.parse(results[0][1]).map(data => new Player(data)) || [];
+            console.log(results[0][1])
             this.games = JSON.parse(results[1][1]) || [];
             this.isLoading = false;
          });

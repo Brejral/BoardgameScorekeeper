@@ -14,7 +14,7 @@ import GameSelectBox from './GameSelectScreen';
    render() {
       return (
          <List>
-            {this.props.screenProps.store.sortedGames.map((rowData) => {
+            {this.props.screenProps.store.games.map((rowData) => {
                return (
                   <ListItem title={rowData.name} />
                );
