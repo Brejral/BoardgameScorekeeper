@@ -4,17 +4,18 @@ export const GAME_INFO = [
       name: '7 Wonders',
       minPlayers: 2,
       maxPlayers: 7,
+      horizontal: false,
       gridScoreHeaderSize: 60,
       gridPlayerHeaderSize: 70,
       gridRowHeight: 60,
-      gridColWidth: 75,
+      gridColWidth: 120,
       gridBorderColor: 'black',
       gridBorderWidth: 1,
       gridHeaderBackgroundColor: 'black',
       gridHeaderTextColor: 'white',
       totalFunc: (scores) => {
          return scores[1] +
-            (scores[2] / 3) +
+            Math.floor(scores[2] / 3) +
             scores[3] +
             scores[4] +
             scores[5] +
@@ -27,8 +28,22 @@ export const GAME_INFO = [
       scoreCols: [
          {
             name: 'Wonder',
+            type: 'category',
+            placeholder: 'Select Wonder...',
             options: [
-
+               'Halicarnassus',
+               'Rhodes',
+               'Ephesus',
+               'Alexandria',
+               'Olympia',
+               'Babylon',
+               'Giza',
+               'The Great Wall',
+               'Manneken Pis',
+               'Stonehenge',
+               'Abu Simbel',
+               'Petras',
+               'Bynzantium',
             ],
          },
          {
@@ -41,7 +56,7 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Coin',
+            name: 'Coins',
             min: 0,
             header: {
                type: 'View',
@@ -49,7 +64,7 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Wonder',
+            name: 'Wonder Bonus',
             min: 0,
             max: 20,
             header: {
@@ -68,7 +83,7 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Civ',
+            name: 'Civilian',
             min: 0,
             header: {
                type: 'View',
@@ -76,7 +91,7 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Com',
+            name: 'Commercial',
             min: 0,
             header: {
                type: 'View',
@@ -84,7 +99,7 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Gui',
+            name: 'Guilds',
             min: 0,
             header: {
                type: 'View',
@@ -92,12 +107,36 @@ export const GAME_INFO = [
             },
          },
          {
-            name: 'Sci',
+            name: 'Gears',
             min: 0,
-            header: {
-               type: 'View',
-               style: { width: 24, height: 36, backgroundColor: 'green', borderWidth: 2, borderColor: 'white', borderRadius: 3, alignSelf: 'center' }
-            },
+            // header: {
+            //    type: 'Icon',
+            //    style: { width: 24, height: 36, backgroundColor: 'green', borderWidth: 2, borderColor: 'white', borderRadius: 3, alignSelf: 'center' }
+            // },
+         },
+         {
+            name: 'Tablets',
+            min: 0,
+            // header: {
+            //    type: 'Icon',
+            //    style: { width: 24, height: 36, backgroundColor: 'green', borderWidth: 2, borderColor: 'white', borderRadius: 3, alignSelf: 'center' }
+            // },
+         },
+         {
+            name: 'Compasses',
+            min: 0,
+            // header: {
+            //    type: 'Icon',
+            //    style: { width: 24, height: 36, backgroundColor: 'green', borderWidth: 2, borderColor: 'white', borderRadius: 3, alignSelf: 'center' }
+            // },
+         },
+         {
+            name: 'Leaders',
+            min: 0,
+            // header: {
+            //    type: 'Icon',
+            //    style: { width: 24, height: 36, backgroundColor: 'green', borderWidth: 2, borderColor: 'white', borderRadius: 3, alignSelf: 'center' }
+            // },
          }
       ]
    }

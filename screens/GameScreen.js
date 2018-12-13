@@ -5,8 +5,9 @@ import { COLORS } from '../constants/Constants';
 import { Avatar, Icon, Text, Divider, List, ListItem, FormInput } from 'react-native-elements';
 import { Grid } from 'react-native-easy-grid';
 import { observable } from 'mobx';
-import { Table, Row, Col, Cell, Cols } from 'react-native-table-component';
+import { Table, Row, Rows, Col, Cell, Cols, TableWrapper } from 'react-native-table-component';
 import Game from '../data/Game';
+import PickerSelect from 'react-native-picker-select';
 
 @observer class GameScreen extends React.Component {
    static navigationOptions = ({ navigation }) => {
@@ -33,6 +34,8 @@ import Game from '../data/Game';
       this.onScoreEndEditing = this.onScoreEndEditing.bind(this);
       this.onHeaderScroll = this.onHeaderScroll.bind(this);
       this.onScoresScroll = this.onScoresScroll.bind(this);
+      this.getEditor = this.getEditor.bind(this);
+      this.getHeader = this.getHeader.bind(this);
    }
 
    componentWillMount() {
@@ -182,82 +185,74 @@ import Game from '../data/Game';
       }
    }
 
+   getEditor(player, index, col, value) {
+      if (!col) { return; }
+      switch (col.type) {
+         case 'category':
+            return (
+               <PickerSelect
+                  placeholder={{
+                     color: 'gray',
+                     label: col.placeholder || 'Select Item...',
+
+                  }}
+                  items={col.options.map((option) => {
+                     return {
+                        label: option,
+                        value: option,
+                     }
+                  })}
+                  hideIcon
+                  style={{
+                     inputIOS: {
+                        textAlign: 'center',
+                        color: 'black',
+                     },
+                     inputAndroid: {
+                        textAlign: 'center',
+                        color: 'black',
+                     }
+                  }}
+                  onValueChange={(value) => this.onScoreChange(player, index, value)}
+               />
+            );
+         default:
+            return (
+               <TextInput
+                  style={{ width: '100%', textAlign: 'center', fontSize: 20 }}
+                  keyboardType='numbers-and-punctuation'
+                  clearTextOnFocus
+                  onFocus={() => this.onScoreFocus(player, index)}
+                  onChangeText={(text) => this.onScoreChange(player, index, text)}
+                  onEndEditing={(text) => this.onScoreEndEditing(player, index, text)}
+                  value={player.tempScores[index].toString()}
+               />
+            );
+
+      }
+   }
+
    render() {
       let gameInfo = this.game.gameInfo;
       if (gameInfo.horizontal) {
          return (
-            <Grid style={{ backgroundColor: '#eee' }}>
-               <Row style={{ height: 40, marginTop: 20, }}>
-                  <Col
-                     size={1}
-                     style={{
-                        justifyContent: 'center',
-                        backgroundColor: gameInfo.gridHeaderBackgroundColor,
-                        borderWidth: gameInfo.gridBorderWidth,
-                        borderColor: gameInfo.gridBorderColor,
-                     }}>
-                     <Text style={{ textAlign: 'center', color: gameInfo.gridHeaderTextColor }}>Players</Text>
-                  </Col>
-                  {gameInfo.scoreCols.map(col => {
-                     return (
-                        <Col
-                           key={'Header' + col.name}
-                           style={{
-                              width: gameInfo.gridColWidth,
-                              justifyContent: 'center',
-                              alignContent: 'center',
-                              backgroundColor: gameInfo.gridHeaderBackgroundColor,
-                              borderWidth: gameInfo.gridBorderWidth,
-                              borderColor: gameInfo.gridBorderColor,
-                           }}>
-                           {this.getHeader(col.header) || <Text style={{ textAlign: 'center', color: gameInfo.gridHeaderTextColor }}>{col.name}</Text>}
-                        </Col>
-                     );
-                  })}
-                  <Col
-                     size={1}
-                     style={{
-                        justifyContent: 'center',
-                        backgroundColor: gameInfo.gridHeaderBackgroundColor,
-                        borderWidth: gameInfo.gridBorderWidth,
-                        borderColor: gameInfo.gridBorderColor,
-                     }}>
-                     <Text style={{ textAlign: 'center', color: gameInfo.gridHeaderTextColor }}>Totals</Text>
-                  </Col>
-               </Row>
-               <Row>
-                  <Col size={1} style={{ alignContent: 'center' }}>
-                     {this.renderPlayerCol()}
-                  </Col>
-                  {this.renderScoreGrid()}
-                  <Col size={1}>
-                     {this.renderTotalCol()}
-                  </Col>
-               </Row>
-               {this.renderPlayerSelect()}
-            </Grid>
-         );
-      }
-      // Vertical Table
-      return (
-         <View>
-            <View style={{ marginTop: 20, flexDirection: 'row' }}>
-               <View>
-                  <Table>
+            <View>
+               <Table style={{ width: '100%', marginBottom: -50 }}>
+                  <TableWrapper style={{ flexDirection: 'row' }}>
                      <Cell
                         data=''
                         style={{
-                           height: gameInfo.gridPlayerHeaderSize || gameInfo.gridRowHeight,
-                           width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                           height: gameInfo.gridScoreHeaderSize || gameInfo.gridRowHeight,
+                           width: gameInfo.gridPlayerHeaderSize || gameInfo.gridColWidth,
                            backgroundColor: gameInfo.gridHeaderBackgroundColor,
                         }}
                      />
-                     <ScrollView bounces={false} onScroll={this.onHeaderScroll} scrollEventThrottle={10} ref={(el) => { this.headerScrollView = el }}>
-                        <Col
+                     <ScrollView horizontal bounces={false} onScroll={this.onHeaderScroll} scrollEventThrottle={10} ref={(el) => { this.headerScrollView = el }}>
+                        <Row
                            data={gameInfo.scoreCols.map((col) => this.getHeader(col.header) || col.name)}
-                           heightArr={gameInfo.scoreCols.map(() => gameInfo.gridRowHeight)}
+                           widthArr={gameInfo.scoreCols.map(() => gameInfo.gridColWidth)}
                            style={{
-                              width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                              height: gameInfo.gridScoreHeaderSize || gameInfo.gridRowHeight,
                               backgroundColor: gameInfo.gridHeaderBackgroundColor,
                            }}
                         />
@@ -265,8 +260,8 @@ import Game from '../data/Game';
                      <Cell
                         data='Totals'
                         style={{
-                           height: gameInfo.gridRowHeight,
-                           width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                           height: gameInfo.gridScoreHeaderSize || gameInfo.gridRowHeight,
+                           width: gameInfo.gridColWidth,
                            backgroundColor: gameInfo.gridHeaderBackgroundColor,
                         }}
                         textStyle={{
@@ -274,10 +269,103 @@ import Game from '../data/Game';
                            textAlign: 'center'
                         }}
                      />
-                  </Table>
-               </View>
+                  </TableWrapper>
+                  <ScrollView bounces={false}>
+                     <TableWrapper style={{ flexDirection: 'row' }}>
+                        <Col
+                           heightArr={this.game.players.map(() => gameInfo.gridRowHeight)}
+                           style={{
+                              backgroundColor: gameInfo.gridHeaderBackgroundColor,
+                              width: gameInfo.gridPlayerHeaderSize || gameInfo.gridColWidth,
+                           }}
+                           data={this.game.players.map((player, index) =>
+                              player.getAvatar({
+                                 rounded: true,
+                                 medium: true,
+                                 backgroundColor: player.isPhantom ? gameInfo.gridHeaderBackgroundColor : null,
+                                 style: {
+                                    alignSelf: 'center',
+                                 },
+                                 onPress: () => { this.onPlayerAvatarPressed(index) }
+                              }))}
+                        />
+                        <ScrollView horizontal bounces={false} onScroll={this.onScoresScroll} scrollEventThrottle={10} ref={(el) => { this.scoresScrollView = el }}>
+                           <Rows
+                              widthArr={gameInfo.scoreCols.map(() => gameInfo.gridColWidth)}
+                              style={{
+                                 height: gameInfo.gridRowHeight
+                              }}
+                              data={this.game.players.map((player, index) => {
+                                 return player.scores.map((score, ind) => {
+                                    return !player.isPhantom ? this.getEditor(player, ind, gameInfo.scoreCols[ind], score) : null;
+                                 });
+                              })}
+                           />
+                        </ScrollView>
+                        <Col
+                           heightArr={this.game.players.map(() => gameInfo.gridRowHeight)}
+                           style={{
+                              width: gameInfo.gridColWidth,
+                              borderTopWidth: 3,
+                           }}
+                           textStyle={{
+                              fontSize: 24,
+                              fontWeight: 'bold',
+                              textAlign: 'center',
+                           }}
+                           data={this.game.players.map(player => {
+                              return !player.isPhantom ? player.totalScore : null;
+                           })}
+                        />
+                     </TableWrapper>
+                  </ScrollView>
+               </Table>
+               {this.renderPlayerSelect()}
+            </View>
+         );
+      }
+      // Vertical Table
+      return (
+         <View>
+            <Table style={{ height: '100%', flexDirection: 'row', marginBottom: -50, }}>
+               <TableWrapper style={{ margin: 0 }}>
+                  <Cell
+                     data=''
+                     style={{
+                        height: gameInfo.gridPlayerHeaderSize || gameInfo.gridRowHeight,
+                        width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                        backgroundColor: gameInfo.gridHeaderBackgroundColor,
+                     }}
+                  />
+                  <ScrollView bounces={false} onScroll={this.onHeaderScroll} scrollEventThrottle={10} ref={(el) => { this.headerScrollView = el }}>
+                     <Col
+                        data={gameInfo.scoreCols.map((col) => this.getHeader(col.header) || col.name)}
+                        heightArr={gameInfo.scoreCols.map(() => gameInfo.gridRowHeight)}
+                        textStyle={{
+                           color: gameInfo.gridHeaderTextColor,
+                           textAlign: 'center'
+                        }}
+                        style={{
+                           width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                           backgroundColor: gameInfo.gridHeaderBackgroundColor,
+                        }}
+                     />
+                  </ScrollView>
+                  <Cell
+                     data='Totals'
+                     style={{
+                        height: gameInfo.gridRowHeight,
+                        width: gameInfo.gridScoreHeaderSize || gameInfo.gridColWidth,
+                        backgroundColor: gameInfo.gridHeaderBackgroundColor,
+                     }}
+                     textStyle={{
+                        color: gameInfo.gridHeaderTextColor,
+                        textAlign: 'center'
+                     }}
+                  />
+               </TableWrapper>
                <ScrollView horizontal bounces={false}>
-                  <Table>
+                  <TableWrapper>
                      <Row
                         data={this.game.players.map((player, index) =>
                            player.getAvatar({
@@ -303,16 +391,7 @@ import Game from '../data/Game';
                            }}
                            data={this.game.players.map((player, index) => {
                               return player.scores.map((score, ind) => {
-                                 return !player.isPhantom ?
-                                    (<TextInput
-                                       style={{ width: '100%', textAlign: 'center', fontSize: 20 }}
-                                       keyboardType='numbers-and-punctuation'
-                                       clearTextOnFocus
-                                       onFocus={() => this.onScoreFocus(player, ind)}
-                                       onChangeText={(text) => this.onScoreChange(player, ind, text)}
-                                       onEndEditing={(text) => this.onScoreEndEditing(player, ind, text)}
-                                       value={player.tempScores[ind].toString()}
-                                    />) : null
+                                 return !player.isPhantom ? this.getEditor(player, ind, gameInfo.scoreCols[ind], score) : null;
                               });
                            })}
                         />
@@ -332,12 +411,12 @@ import Game from '../data/Game';
                            return !player.isPhantom ? player.totalScore : null;
                         })}
                      />
-                  </Table>
+                  </TableWrapper>
                </ScrollView>
-            </View>
+            </Table>
             {this.renderPlayerSelect()}
          </View>
-      )
+      );
    }
 
 }

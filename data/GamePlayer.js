@@ -10,13 +10,15 @@ export default class GamePlayer {
    @observable scores = [];
    @observable tempScores = [];
    @observable isPhantom = false;
-   @observable avatarProps = null
+   @observable avatarProps = null;
+   gameInfo = null;
 
    constructor(data, gameInfo) {
       this.id = data.id;
       this.firstName = data.firstName;
       this.lastName = data.lastName;
       this.isPhantom = data.isPhantom;
+      this.totalFunc = gameInfo.totalFunc;
       this.avatarProps = data.avatarProps || {
          borderColor: COLORS.Text1,
          titleColor: COLORS.Text1,
@@ -35,7 +37,7 @@ export default class GamePlayer {
    }
 
    @computed get totalScore() {
-      return this.scores.reduce((a, b) => (Number.parseInt(a) || 0) + (Number.parseInt(b) || 0));
+      return this.totalFunc ? this.totalFunc(this.scores) : this.scores.reduce((a, b) => (Number.parseInt(a) || 0) + (Number.parseInt(b) || 0));
    }
 
    @action assignScores(scores) {
